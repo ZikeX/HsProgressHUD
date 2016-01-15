@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "HsProgressHUD/HsProgressHUD.h"
+#import "HsProgressHUD.h"
 
 
 @interface ViewController ()

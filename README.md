@@ -1,4 +1,5 @@
-# HsProgressHUD
+# HsProgressHUD one can dismiss ProgressHUD with message 、warn、error、success、loading，and warn and error never dismiss
+
 
 one can dismiss ProgressHUD with message 、warn、error、success、loading，and warn and error never dismiss
 
