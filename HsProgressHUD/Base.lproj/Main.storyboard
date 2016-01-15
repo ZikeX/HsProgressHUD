@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O8D-Lm-6I5">
+                                <rect key="frame" x="110" y="53" width="46" height="30"/>
+                                <state key="normal" title="show"/>
+                                <connections>
+                                    <action selector="progressShowAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qsG-Tx-9XW"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5sN-mV-f8E">
+                                <rect key="frame" x="102" y="116" width="62" height="30"/>
+                                <state key="normal" title="dismiss"/>
+                                <connections>
+                                    <action selector="progressDismissAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uJ2-Ah-UDe"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hSf-0J-YMJ">
+                                <rect key="frame" x="110" y="169" width="61" height="30"/>
+                                <state key="normal" title="success"/>
+                                <connections>
+                                    <action selector="progressSuccessAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cQA-Fi-GBI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nf9-KF-bcM">
+                                <rect key="frame" x="114" y="228" width="46" height="30"/>
+                                <state key="normal" title="error"/>
+                                <connections>
+                                    <action selector="progressErrorAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KMr-lF-hfF"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nkp-5B-GRc">
+                                <rect key="frame" x="110" y="285" width="46" height="30"/>
+                                <state key="normal" title="warn"/>
+                                <connections>
+                                    <action selector="progressErrorAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ldR-Fg-GV7"/>
+                                    <action selector="progressWarnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yg1-kX-nmc"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="209" y="339"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,44 +1,27 @@
-# JsonToEntity
+# HsProgressHUD
 
-超级简单的json转Model 核心代码就10来行，支持异步,支持coreData,使用时一个方法搞定(objectWithData:),喜欢用自己能看得懂的代码人的最爱，超级简单，入门就能看懂，如果你有好的建议请联系我:419591321@qq.com
+one can dismiss ProgressHUD with message 、warn、error、success、loading，and warn and error never dismiss
 
-简单使用 pod 'JsonToEntity' '1.0.0'
+简单使用 pod 'HsProgressHUD' '1.0.0'
 
-例子
-一、
-NSDictionary *dic = @{
-    @"id":@"1234",
-    @"name":@"金融"
-};
+```c
+- (IBAction)progressShowAction:(id)sender {
+[HsProgressHUD showWithTitle:@"客户请稍后,数据马上奉上"];
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+[HsProgressHUD showWithErrorTitle:@"功提交成功提交成功"];
+});
+}
+- (IBAction)progressDismissAction:(id)sender {
+[HsProgressHUD dismiss];
+}
+- (IBAction)progressSuccessAction:(id)sender {
+[HsProgressHUD showWithSucessTitle:@"提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功提交成功"];
+}
+- (IBAction)progressErrorAction:(id)sender {
+[HsProgressHUD showWithErrorTitle:@"提交失败提交失败提交失败提交失败"];
+}
+- (IBAction)progressWarnAction:(id)sender {
+[HsProgressHUD showWithWarnTitle:@"提交失败提交失败提交失败提交失败"];
+}
 
-Dept *dept = [Dept objectWithData:dic];
-NSLog(@"%@",dept.name);
-二、
-NSDictionary *dic = @{
-    @"id":@"123",
-    @"name":@"wjd",
-    @"isRegister":@1,
-    @"sex":@"0",
-    @"dept":@{
-        @"name":@"金融"
-    }
-};
-
-User *user = [User objectWithData:dic];
-NSLog(@"id:%d,sex:%@,name:%@ ,isRegister:%d, deptName:%@",user.ID,user.sexString,user.name,user.isRegister,user.dept.name);
-三、
-
-NSDictionary *dic = @{
-    @"compayName":@"hs",
-    @"userArray":@[
-        @{@"name":@"wjd1",@"sex":@"0",@"dept":@{@"name":@"通信"}},
-        @{@"name":@"wjd2",@"sex":@"1",@"dept":@{@"name":@"金融"}},
-        @{@"name":@"wjd3",@"sex":@"0",@"dept":@{@"name":@"通信"}},
-        @{@"name":@"wjd4",@"sex":@"1",@"dept":@{@"name":@"时光飞逝"}}
-    ]
-};
-
-Compay *compay = [Compay objectWithData:dic];
-User *user = compay.userArray[0];
-
-NSLog(@"copmayName:%@,第一个用户信息：name-%@,sex-%@,deptname:%@",compay.compayName,user.name,user.sexString,user.dept.name);
+```
