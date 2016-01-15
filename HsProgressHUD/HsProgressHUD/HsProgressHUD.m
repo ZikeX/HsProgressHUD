@@ -10,7 +10,7 @@
 #import "HsProgressLoadingView.h"
 
 #define contentViewWidth 220
-#define contentViewHeight 60
+#define contentViewHeight 50
 #define deleteViewWidth 50
 #define defaultTitleHeight 20
 #define titlePadding 10
@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 @property (nonatomic,strong) UIImage *messageImage;
 
 @property (nonatomic,assign) HsProgressStatus status;
+@property (nonatomic,copy) HsProgressHUDCancelBlock cancelBlock;
 
 @end
 
@@ -62,7 +63,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         shareView = [[self alloc] initWithFrame:window.bounds];
         shareView.showInView = window;
-        shareView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+        shareView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         [shareView setupLayout];
         [shareView setupStyle];
     });
@@ -110,7 +111,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     
     self.lineView.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
     
-    [self.opearButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    [self.opearButton addTarget:self action:@selector(buttonTap) forControlEvents:UIControlEventTouchUpInside];
     
     NSBundle *bundle =  [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"HsProgressBundle" withExtension:@"bundle"]];
     self.deleteImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"delete@2x" ofType:@"png"]];
@@ -304,6 +305,12 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
         [view removeFromSuperview];
     }
 }
+- (void)buttonTap {
+    if (self.cancelBlock) {
+        self.cancelBlock();
+    }
+    [self dismiss];
+}
 #pragma mark ------------------------------------------------
 + (void)show{
     [[HsProgressHUD shareInstance] show];
@@ -334,7 +341,9 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 + (void)dismissAfterDelay:(NSTimeInterval)delay {
     [[HsProgressHUD shareInstance] dismissAfterDelay:delay];
 }
-
++ (void)cancelAction:(HsProgressHUDCancelBlock)cancelBlock {
+    [HsProgressHUD shareInstance].cancelBlock = cancelBlock;
+}
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
