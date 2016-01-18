@@ -7,10 +7,12 @@
 //
 
 #import "HsProgressHUD.h"
-#import "HsProgressLoadingView.h"
 
-#define contentViewWidth 220
-#define contentViewHeight 50
+
+#define defaultContentContainerViewWidth 220
+#define defaultContentContainerViewHeight 60
+#define minContentContainerViewHeight 50
+
 #define deleteViewWidth 50
 #define defaultTitleHeight 20
 #define titlePadding 10
@@ -29,10 +31,10 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 //superView 要显示在的父视图
 @property (nonatomic,weak) UIView *showInView;
 //中间视图
-@property (nonatomic,strong) UIView *centerView;
+@property (nonatomic,strong) UIView *centerContainerView;
 //内容视图
-@property (nonatomic,strong) UIView *contentView;
-@property (nonatomic,strong) UIView *loadingView;
+@property (nonatomic,strong) UIView *contentContainerView;
+@property (nonatomic,strong) UIView *loadingContainerView;
 @property (nonatomic,strong) UILabel *titleView;
 //操作按钮
 @property (nonatomic,strong) UIButton *opearButton;
@@ -61,6 +63,9 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     static HsProgressHUD *shareView;
     dispatch_once(&once, ^{
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        if (!window) {
+            NSLog(@"HsProgressHUD:window is nil ");
+        }
         shareView = [[self alloc] initWithFrame:window.bounds];
         shareView.showInView = window;
         shareView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
@@ -72,21 +77,21 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 
 //初始化视图布局
 - (void)setupLayout {
-    self.centerView = [[UIView alloc] init];
-    [self addSubview:self.centerView];
+    self.centerContainerView = [[UIView alloc] init];
+    [self addSubview:self.centerContainerView];
     
-    self.contentView = [[UIView alloc] init];
-    [self.centerView addSubview:self.contentView];
+    self.contentContainerView = [[UIView alloc] init];
+    [self.centerContainerView addSubview:self.contentContainerView];
     
-    self.loadingView = [[UIView alloc] init];
-    [self.contentView addSubview:self.loadingView];
+    self.loadingContainerView = [[UIView alloc] init];
+    [self.contentContainerView addSubview:self.loadingContainerView];
     
     self.titleView = [[UILabel alloc] init];
-    [self.contentView addSubview:self.titleView];
+    [self.contentContainerView addSubview:self.titleView];
     
     
     self.opearButton = [[UIButton alloc] init];
-    [self.centerView addSubview:self.opearButton];
+    [self.centerContainerView addSubview:self.opearButton];
     
     self.lineView = [[UIView alloc] init];
     [self.opearButton addSubview:self.lineView];
@@ -95,11 +100,11 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 }
 //初始化样式
 - (void)setupStyle {
-    self.centerView.backgroundColor = [UIColor blackColor];
-    self.centerView.layer.cornerRadius = 4;
-    self.centerView.layer.masksToBounds = YES;
+    self.centerContainerView.backgroundColor = [UIColor blackColor];
+    self.centerContainerView.layer.cornerRadius = 4;
+    self.centerContainerView.layer.masksToBounds = YES;
     
-    self.contentView.backgroundColor = [UIColor clearColor];
+    self.contentContainerView.backgroundColor = [UIColor clearColor];
     
     self.titleView.font = [UIFont systemFontOfSize:14.0f];
     self.titleView.textAlignment = NSTextAlignmentCenter;
@@ -110,6 +115,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     self.opearButton.backgroundColor = [UIColor clearColor];
     
     self.lineView.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
+    self.loadingContainerView.backgroundColor = [UIColor clearColor];
     
     [self.opearButton addTarget:self action:@selector(buttonTap) forControlEvents:UIControlEventTouchUpInside];
     
@@ -124,19 +130,19 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 #pragma mark ---------------- reset layout and style ----------------------
 - (void)resetFrame {
     if (_status == HsProgressStatusLoading) {
-        CGFloat height = contentViewHeight;
+        CGFloat height = defaultContentContainerViewHeight;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
-            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(contentViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
+            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
             titleHeight = rect.size.height + 10;
         }
         height += titleHeight;
         
-        self.centerView.frame = CGRectMake((self.showInView.frame.size.width-contentViewWidth)/2, (self.showInView.frame.size.height-height)/2, contentViewWidth, height);
-        self.contentView.frame = CGRectMake(0, 0, self.centerView.frame.size.width-deleteViewWidth, self.centerView.frame.size.height);
-        self.loadingView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height-titleHeight);
-        self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingView.frame), self.contentView.frame.size.width-titlePadding*2, titleHeight);
-        self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentView.frame), 0, deleteViewWidth, self.centerView.frame.size.height);
+        self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+        self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
+        self.loadingContainerView.frame = CGRectMake(0, 0, self.contentContainerView.frame.size.width, self.contentContainerView.frame.size.height-titleHeight);
+        self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingContainerView.frame), self.contentContainerView.frame.size.width-titlePadding*2, titleHeight);
+        self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentContainerView.frame), 0, deleteViewWidth, self.centerContainerView.frame.size.height);
         self.lineView.frame = CGRectMake(0, 0, 1, self.opearButton.frame.size.height);
         [self.opearButton setImage:self.deleteImage forState:UIControlStateNormal];
         self.opearButton.enabled = YES;
@@ -144,18 +150,18 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
         CGFloat height = 10;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
-            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(contentViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
+            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
             titleHeight = rect.size.height + 10;
         }
         height += titleHeight;
-        height = height < contentViewHeight ?contentViewHeight:height;
+        height = height < minContentContainerViewHeight ?minContentContainerViewHeight:height;
         
         [UIView animateWithDuration:0.5f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:9 options:0 animations:^{
-            self.centerView.frame = CGRectMake((self.showInView.frame.size.width-contentViewWidth)/2, (self.showInView.frame.size.height-height)/2, contentViewWidth, height);
-            self.contentView.frame = CGRectMake(0, 0, self.centerView.frame.size.width-deleteViewWidth, self.centerView.frame.size.height);
-            self.loadingView.frame = CGRectZero;
-            self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingView.frame), self.contentView.frame.size.width-titlePadding*2, height);
-            self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentView.frame), 0, deleteViewWidth, self.centerView.frame.size.height);
+            self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+            self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
+            self.loadingContainerView.frame = CGRectZero;
+            self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingContainerView.frame), self.contentContainerView.frame.size.width-titlePadding*2, height);
+            self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentContainerView.frame), 0, deleteViewWidth, self.centerContainerView.frame.size.height);
             self.lineView.frame = CGRectMake(0, 0, 1, self.opearButton.frame.size.height);
             if (_status == HsProgressStatusSucess) {
                 [self.opearButton setImage:self.successImage forState:UIControlStateNormal];
@@ -171,16 +177,16 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
             CGFloat height = 10;
             CGFloat titleHeight = 20;
             if (_weaskSelf.titleView.text.length > 0) {
-                CGRect rect= [_weaskSelf.titleView.text boundingRectWithSize:CGSizeMake(contentViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_weaskSelf.titleView.font} context:nil];
+                CGRect rect= [_weaskSelf.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_weaskSelf.titleView.font} context:nil];
                 titleHeight = rect.size.height + 10;
             }
             height += titleHeight;
-            height = height < contentViewHeight ?contentViewHeight:height;
-            _weaskSelf.centerView.frame = CGRectMake((_weaskSelf.showInView.frame.size.width-contentViewWidth)/2, (_weaskSelf.showInView.frame.size.height-height)/2, contentViewWidth, height);
-            _weaskSelf.contentView.frame = CGRectMake(0, 0, _weaskSelf.centerView.frame.size.width-deleteViewWidth, _weaskSelf.centerView.frame.size.height);
-            _weaskSelf.loadingView.frame = CGRectZero;
-            _weaskSelf.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(_weaskSelf.loadingView.frame), _weaskSelf.contentView.frame.size.width-titlePadding*2, height);
-            _weaskSelf.opearButton.frame = CGRectMake(CGRectGetMaxX(_weaskSelf.contentView.frame), 0, deleteViewWidth, _weaskSelf.centerView.frame.size.height);
+            height = height < minContentContainerViewHeight ?minContentContainerViewHeight:height;
+            _weaskSelf.centerContainerView.frame = CGRectMake((_weaskSelf.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (_weaskSelf.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+            _weaskSelf.contentContainerView.frame = CGRectMake(0, 0, _weaskSelf.centerContainerView.frame.size.width-deleteViewWidth, _weaskSelf.centerContainerView.frame.size.height);
+            _weaskSelf.loadingContainerView.frame = CGRectZero;
+            _weaskSelf.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(_weaskSelf.loadingContainerView.frame), _weaskSelf.contentContainerView.frame.size.width-titlePadding*2, height);
+            _weaskSelf.opearButton.frame = CGRectMake(CGRectGetMaxX(_weaskSelf.contentContainerView.frame), 0, deleteViewWidth, _weaskSelf.centerContainerView.frame.size.height);
             _weaskSelf.lineView.frame = CGRectMake(0, 0, 1, _weaskSelf.opearButton.frame.size.height);
             if (_status == HsProgressStatusError) {
                 [_weaskSelf.opearButton setImage:_weaskSelf.errorImage forState:UIControlStateNormal];
@@ -190,12 +196,12 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
         };
         if (_lastStatus == HsProgressStatusLoading) {
             changeFrame();
-            [self shakeAnimationForView:self.centerView];
+            [self shakeAnimationForView:self.centerContainerView];
         }else{
              [UIView animateWithDuration:0.5f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:9 options:0 animations:^{
                  changeFrame();
              } completion:^(BOOL finished) {
-                [self shakeAnimationForView:self.centerView];
+                [self shakeAnimationForView:self.centerContainerView];
              }];
         }
         
@@ -248,9 +254,17 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     self.titleView.text = title;
     [self.showInView addSubview:self];
     [self resetFrame];
-    
-    HsProgressLoadingView *loadingView = [[HsProgressLoadingView alloc] initWithFrame:self.loadingView.bounds];
-    [self.loadingView addSubview:loadingView];
+    if (self.loadingView == nil) {
+        UIActivityIndicatorView *loadView = [[UIActivityIndicatorView alloc] initWithFrame:self.loadingContainerView.bounds];
+        loadView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+        loadView.center = self.loadingContainerView.center;
+        [self.loadingContainerView addSubview:loadView];
+        [loadView startAnimating];
+    }else{
+        self.loadingView.frame = self.loadingContainerView.bounds;
+        [self.loadingContainerView addSubview:self.loadingView];
+    }
+  
 }
 - (void)showWithTitle:(NSString *)title status:(HsProgressStatus)status delay:(CGFloat)delay{
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
@@ -277,7 +291,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 }
 
 - (void)showWithWarnTitle:(NSString *)title {
-    [self showWithTitle:title status:HsProgressStatusWarn delay:0.0f];
+    [self showWithTitle:title status:HsProgressStatusWarn delay:3.0f];
 }
 
 - (void)immediatelyDismiss {
@@ -301,7 +315,7 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 }
 
 - (void)clearLoadingView {
-    for (UIView *view in self.loadingView.subviews) {
+    for (UIView *view in self.loadingContainerView.subviews) {
         [view removeFromSuperview];
     }
 }

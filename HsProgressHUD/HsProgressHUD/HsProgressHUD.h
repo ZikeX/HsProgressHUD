@@ -12,6 +12,10 @@ typedef void(^HsProgressHUDCancelBlock)(void) ;
 
 @interface HsProgressHUD : UIView
 
+@property (nonatomic,strong) UIView *loadingView;
+
++ (instancetype)shareInstance;
+
 /**
  *  @author wangjindong, 16-01-15 13:01:03
  *

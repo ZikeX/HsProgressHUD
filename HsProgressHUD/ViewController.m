@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "HsProgressHUD.h"
+#import "HsProgressLoadingView.h"
 
 
 @interface ViewController ()
@@ -18,10 +19,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
     // Do any additional setup after loading the view, typically from a nib.
 }
 - (IBAction)progressShowAction:(id)sender {
+  //  HsProgressLoadingView *loadingView = [[HsProgressLoadingView alloc] init];
+  //  [HsProgressHUD shareInstance].loadingView = loadingView;
     [HsProgressHUD showWithTitle:@"客户请稍后,数据马上奉上"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [HsProgressHUD showWithErrorTitle:@"功提交成功提交成功"];
