@@ -12,10 +12,23 @@ typedef void(^HsProgressHUDCancelBlock)(void) ;
 
 @interface HsProgressHUD : UIView
 
+@property (nonatomic,strong) UIImage *deleteImage;
+@property (nonatomic,strong) UIImage *successImage;
+@property (nonatomic,strong) UIImage *errorImage;
+@property (nonatomic,strong) UIImage *warnImage;
+@property (nonatomic,strong) UIImage *messageImage;
+
 @property (nonatomic,strong) UIView *loadingView;
 
 + (instancetype)shareInstance;
 
+
++ (void)setDefaultContentContainerViewHeight:(CGFloat)defaultContentContainerViewHeight ;
++ (void)setDefaultContentContainerViewWidth:(CGFloat)defaultContentContainerViewWidth ;
++ (void)setMinContentContainerViewHeight:(CGFloat)minContentContainerViewHeight ;
+
+
+#pragma mark ---------------------------------
 /**
  *  @author wangjindong, 16-01-15 13:01:03
  *

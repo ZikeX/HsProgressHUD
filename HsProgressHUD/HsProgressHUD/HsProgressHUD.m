@@ -8,13 +8,7 @@
 
 #import "HsProgressHUD.h"
 
-
-#define defaultContentContainerViewWidth 220
-#define defaultContentContainerViewHeight 60
-#define minContentContainerViewHeight 50
-
 #define deleteViewWidth 50
-#define defaultTitleHeight 20
 #define titlePadding 10
 
 typedef NS_ENUM(NSInteger, HsProgressStatus) {
@@ -25,6 +19,9 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     HsProgressStatusMessage,
 };
 
+static float _defaultContentContainerViewWidth = 220;
+static float _defaultContentContainerViewHeight = 50;
+static float _minContentContainerViewHeight = 50;
 
 @interface HsProgressHUD ()
 
@@ -43,11 +40,6 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 //是否在显示
 @property (nonatomic,assign) BOOL isShowing;
 
-@property (nonatomic,strong) UIImage *deleteImage;
-@property (nonatomic,strong) UIImage *successImage;
-@property (nonatomic,strong) UIImage *errorImage;
-@property (nonatomic,strong) UIImage *warnImage;
-@property (nonatomic,strong) UIImage *messageImage;
 
 @property (nonatomic,assign) HsProgressStatus status;
 @property (nonatomic,copy) HsProgressHUDCancelBlock cancelBlock;
@@ -58,6 +50,15 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     HsProgressStatus _lastStatus;
 }
 
++ (void)setDefaultContentContainerViewHeight:(CGFloat)defaultContentContainerViewHeight {
+    _defaultContentContainerViewHeight = defaultContentContainerViewHeight;
+}
++ (void)setDefaultContentContainerViewWidth:(CGFloat)defaultContentContainerViewWidth {
+    _defaultContentContainerViewWidth = defaultContentContainerViewWidth;
+}
++ (void)setMinContentContainerViewHeight:(CGFloat)minContentContainerViewHeight {
+    _minContentContainerViewHeight = minContentContainerViewHeight;
+}
 + (instancetype)shareInstance {
     static dispatch_once_t once;
     static HsProgressHUD *shareView;
@@ -130,15 +131,15 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
 #pragma mark ---------------- reset layout and style ----------------------
 - (void)resetFrame {
     if (_status == HsProgressStatusLoading) {
-        CGFloat height = defaultContentContainerViewHeight;
+        CGFloat height = _defaultContentContainerViewHeight;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
-            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
+            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(_defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
             titleHeight = rect.size.height + 10;
         }
         height += titleHeight;
         
-        self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+        self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-_defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, _defaultContentContainerViewWidth, height);
         self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
         self.loadingContainerView.frame = CGRectMake(0, 0, self.contentContainerView.frame.size.width, self.contentContainerView.frame.size.height-titleHeight);
         self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingContainerView.frame), self.contentContainerView.frame.size.width-titlePadding*2, titleHeight);
@@ -150,14 +151,14 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
         CGFloat height = 10;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
-            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
+            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(_defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
             titleHeight = rect.size.height + 10;
         }
         height += titleHeight;
-        height = height < minContentContainerViewHeight ?minContentContainerViewHeight:height;
+        height = height < _minContentContainerViewHeight ? _minContentContainerViewHeight : height;
         
         [UIView animateWithDuration:0.5f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:9 options:0 animations:^{
-            self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+            self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-_defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, _defaultContentContainerViewWidth, height);
             self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
             self.loadingContainerView.frame = CGRectZero;
             self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingContainerView.frame), self.contentContainerView.frame.size.width-titlePadding*2, height);
@@ -177,12 +178,12 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
             CGFloat height = 10;
             CGFloat titleHeight = 20;
             if (_weaskSelf.titleView.text.length > 0) {
-                CGRect rect= [_weaskSelf.titleView.text boundingRectWithSize:CGSizeMake(defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_weaskSelf.titleView.font} context:nil];
+                CGRect rect= [_weaskSelf.titleView.text boundingRectWithSize:CGSizeMake(_defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_weaskSelf.titleView.font} context:nil];
                 titleHeight = rect.size.height + 10;
             }
             height += titleHeight;
-            height = height < minContentContainerViewHeight ?minContentContainerViewHeight:height;
-            _weaskSelf.centerContainerView.frame = CGRectMake((_weaskSelf.showInView.frame.size.width-defaultContentContainerViewWidth)/2, (_weaskSelf.showInView.frame.size.height-height)/2, defaultContentContainerViewWidth, height);
+            height = height < _minContentContainerViewHeight ? _minContentContainerViewHeight : height;
+            _weaskSelf.centerContainerView.frame = CGRectMake((_weaskSelf.showInView.frame.size.width-_defaultContentContainerViewWidth)/2, (_weaskSelf.showInView.frame.size.height-height)/2, _defaultContentContainerViewWidth, height);
             _weaskSelf.contentContainerView.frame = CGRectMake(0, 0, _weaskSelf.centerContainerView.frame.size.width-deleteViewWidth, _weaskSelf.centerContainerView.frame.size.height);
             _weaskSelf.loadingContainerView.frame = CGRectZero;
             _weaskSelf.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(_weaskSelf.loadingContainerView.frame), _weaskSelf.contentContainerView.frame.size.width-titlePadding*2, height);
