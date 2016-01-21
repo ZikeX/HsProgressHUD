@@ -1,5 +1,7 @@
 # HsProgressHUD 
 
+![HsProgressHUD](https://github.com/wangjindong/HsProgressHUD/blob/master/progress.gif)
+
 one can dismiss ProgressHUD with message 、warn、error、success、loading，and warn and error never dismiss
 
 简单使用 pod 'HsProgressHUD' '1.0.0'
