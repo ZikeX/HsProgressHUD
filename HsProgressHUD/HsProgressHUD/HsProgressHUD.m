@@ -135,7 +135,7 @@ static float _minContentContainerViewHeight = 50;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
             CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(_defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
-            titleHeight = rect.size.height + 10;
+            titleHeight = rect.size.height + 15;
         }
         height += titleHeight;
         
