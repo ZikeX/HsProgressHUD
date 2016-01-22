@@ -10,6 +10,13 @@
 
 typedef void(^HsProgressHUDCancelBlock)(void) ;
 
+typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
+    HsProgressStatusNoneShow,
+    HsProgressStatusDidShow,
+    HsProgressStatusWillDismiss,
+    HsProgressStatusDidDismiss,
+};
+
 @interface HsProgressHUD : UIView
 
 @property (nonatomic,strong) UIImage *deleteImage;
@@ -19,6 +26,7 @@ typedef void(^HsProgressHUDCancelBlock)(void) ;
 @property (nonatomic,strong) UIImage *messageImage;
 
 @property (nonatomic,strong) UIView *loadingView;
+@property (nonatomic,assign) HsProgressShowStatus showStatus;
 
 + (instancetype)shareInstance;
 

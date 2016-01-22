@@ -37,8 +37,6 @@ static float _minContentContainerViewHeight = 50;
 @property (nonatomic,strong) UIButton *opearButton;
 //分割线
 @property (nonatomic,strong) UIView *lineView;
-//是否在显示
-@property (nonatomic,assign) BOOL isShowing;
 
 
 @property (nonatomic,assign) HsProgressStatus status;
@@ -247,10 +245,10 @@ static float _minContentContainerViewHeight = 50;
 }
 
 - (void)showWithTitle:(NSString *)title {
-    if (self.isShowing) {
+    if (self.showStatus == HsProgressStatusDidShow) {
         return;
     }
-    self.isShowing = YES;
+    self.showStatus = HsProgressStatusDidShow;
     self.status = HsProgressStatusLoading;
     self.titleView.text = title;
     [self.showInView addSubview:self];
@@ -265,16 +263,15 @@ static float _minContentContainerViewHeight = 50;
         self.loadingView.frame = self.loadingContainerView.bounds;
         [self.loadingContainerView addSubview:self.loadingView];
     }
-  
 }
 - (void)showWithTitle:(NSString *)title status:(HsProgressStatus)status delay:(CGFloat)delay{
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
     [self immediatelyDismiss];
     [self clearLoadingView];
-    self.isShowing = YES;
     self.status = status;
     self.titleView.text = title;
     [self.showInView addSubview:self];
+    self.showStatus = HsProgressStatusDidShow;
     [self resetFrame];
     if (delay > 0) {
         [self dismissAfterDelay:delay];
@@ -296,12 +293,13 @@ static float _minContentContainerViewHeight = 50;
 }
 
 - (void)immediatelyDismiss {
+    self.showStatus = HsProgressStatusDidDismiss;
     [self clearLoadingView];
-    self.isShowing = NO;
     [self removeFromSuperview];
 }
 - (void)dismiss {
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
+    self.showStatus = HsProgressStatusWillDismiss;
     [UIView animateWithDuration:0.2f animations:^{
         self.alpha = 0.5f;
     } completion:^(BOOL finished) {
