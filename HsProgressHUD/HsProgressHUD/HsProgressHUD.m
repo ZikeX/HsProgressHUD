@@ -47,7 +47,9 @@ static float _minContentContainerViewHeight = 50;
 @implementation HsProgressHUD{
     HsProgressStatus _lastStatus;
 }
-
++ (void)setCancelEnable:(BOOL)cancelEnable {
+    [HsProgressHUD shareInstance].cancelEnable = cancelEnable;
+}
 + (void)setDefaultContentContainerViewHeight:(CGFloat)defaultContentContainerViewHeight {
     _defaultContentContainerViewHeight = defaultContentContainerViewHeight;
 }
@@ -68,6 +70,7 @@ static float _minContentContainerViewHeight = 50;
         shareView = [[self alloc] initWithFrame:window.bounds];
         shareView.showInView = window;
         shareView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+        shareView.cancelEnable = YES;
         [shareView setupLayout];
         [shareView setupStyle];
     });
@@ -132,19 +135,29 @@ static float _minContentContainerViewHeight = 50;
         CGFloat height = _defaultContentContainerViewHeight;
         CGFloat titleHeight = 20;
         if (self.titleView.text.length > 0) {
-            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(_defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
+            CGFloat width = _defaultContentContainerViewWidth-deleteViewWidth-titlePadding*2;
+            if (!self.cancelEnable) {
+                width = _defaultContentContainerViewWidth-titlePadding*2;
+            }
+            CGRect rect= [self.titleView.text boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:self.titleView.font} context:nil];
             titleHeight = rect.size.height + 15;
         }
         height += titleHeight;
         
         self.centerContainerView.frame = CGRectMake((self.showInView.frame.size.width-_defaultContentContainerViewWidth)/2, (self.showInView.frame.size.height-height)/2, _defaultContentContainerViewWidth, height);
-        self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
+        if (self.cancelEnable) {
+            self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width-deleteViewWidth, self.centerContainerView.frame.size.height);
+            self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentContainerView.frame), 0, deleteViewWidth, self.centerContainerView.frame.size.height);
+            self.opearButton.hidden = NO;
+        }else{
+             self.contentContainerView.frame = CGRectMake(0, 0, self.centerContainerView.frame.size.width, self.centerContainerView.frame.size.height);
+            self.opearButton.hidden = YES;
+        }
         self.loadingContainerView.frame = CGRectMake(0, 0, self.contentContainerView.frame.size.width, self.contentContainerView.frame.size.height-titleHeight);
         self.titleView.frame = CGRectMake(titlePadding, CGRectGetMaxY(self.loadingContainerView.frame), self.contentContainerView.frame.size.width-titlePadding*2, titleHeight);
-        self.opearButton.frame = CGRectMake(CGRectGetMaxX(self.contentContainerView.frame), 0, deleteViewWidth, self.centerContainerView.frame.size.height);
         self.lineView.frame = CGRectMake(0, 0, 1, self.opearButton.frame.size.height);
-        [self.opearButton setImage:self.deleteImage forState:UIControlStateNormal];
         self.opearButton.enabled = YES;
+        [self.opearButton setImage:self.deleteImage forState:UIControlStateNormal];
     }else if (_status == HsProgressStatusSucess || _status == HsProgressStatusMessage) {
         CGFloat height = 10;
         CGFloat titleHeight = 20;
@@ -167,7 +180,7 @@ static float _minContentContainerViewHeight = 50;
             }else if (_status == HsProgressStatusMessage){
                 [self.opearButton setImage:self.messageImage forState:UIControlStateNormal];
             }
-            
+            self.opearButton.hidden = NO;
         } completion:^(BOOL finished) {
         }];        
     }else if (_status == HsProgressStatusError || _status == HsProgressStatusWarn) {
@@ -192,6 +205,7 @@ static float _minContentContainerViewHeight = 50;
             }else if (_status == HsProgressStatusWarn){
                 [_weaskSelf.opearButton setImage:_weaskSelf.warnImage forState:UIControlStateNormal];
             }
+            _weaskSelf.opearButton.hidden = NO;
         };
         if (_lastStatus == HsProgressStatusLoading) {
             changeFrame();

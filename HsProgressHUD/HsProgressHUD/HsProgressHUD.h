@@ -28,9 +28,11 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
 @property (nonatomic,strong) UIView *loadingView;
 @property (nonatomic,assign) HsProgressShowStatus showStatus;
 
+@property (nonatomic,assign) BOOL cancelEnable;
+
 + (instancetype)shareInstance;
 
-
++ (void)setCancelEnable:(BOOL)cancelEnable;
 + (void)setDefaultContentContainerViewHeight:(CGFloat)defaultContentContainerViewHeight ;
 + (void)setDefaultContentContainerViewWidth:(CGFloat)defaultContentContainerViewWidth ;
 + (void)setMinContentContainerViewHeight:(CGFloat)minContentContainerViewHeight ;
