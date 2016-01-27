@@ -63,12 +63,7 @@ static float _minContentContainerViewHeight = 50;
     static dispatch_once_t once;
     static HsProgressHUD *shareView;
     dispatch_once(&once, ^{
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
-        if (!window) {
-            NSLog(@"HsProgressHUD:window is nil ");
-        }
-        shareView = [[self alloc] initWithFrame:window.bounds];
-        shareView.showInView = window;
+        shareView = [[self alloc] initWithFrame:[UIScreen mainScreen].bounds];
         shareView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         shareView.cancelEnable = YES;
         [shareView setupLayout];
@@ -99,6 +94,18 @@ static float _minContentContainerViewHeight = 50;
     [self.opearButton addSubview:self.lineView];
     
     [self resetFrame];
+}
+- (UIView *)showInView {
+    if (_showInView == nil) {
+        _showInView = [UIApplication sharedApplication].keyWindow;
+        if (_showInView == nil) {
+            id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+            if ([delegate respondsToSelector:@selector(window)]) {
+                _showInView = [delegate performSelector:@selector(window)];
+            }
+        }
+    }
+    return _showInView;
 }
 //初始化样式
 - (void)setupStyle {

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'HsProgressHUD'
-  spec.version      = '1.1.4'
+  spec.version      = '1.1.5'
   spec.summary      = 'one can dismiss ProgressHUD with message 、warn、error、success、loading，and warn and error never dismiss'
   spec.homepage     = 'https://github.com/wangjindong/HsProgressHUD'
   spec.license      = 'MIT'
