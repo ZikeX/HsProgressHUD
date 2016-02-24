@@ -19,9 +19,9 @@ typedef NS_ENUM(NSInteger, HsProgressStatus) {
     HsProgressStatusMessage,
 };
 
-static float _defaultContentContainerViewWidth = 220;
-static float _defaultContentContainerViewHeight = 50;
-static float _minContentContainerViewHeight = 50;
+static float _defaultContentContainerViewWidth = 220;//内容宽度
+static float _defaultContentContainerViewHeight = 35;//loading height
+static float _minContentContainerViewHeight = 50;//内容最小高度
 
 @interface HsProgressHUD ()
 
@@ -275,9 +275,9 @@ static float _minContentContainerViewHeight = 50;
     [self.showInView addSubview:self];
     [self resetFrame];
     if (self.loadingView == nil) {
-        UIActivityIndicatorView *loadView = [[UIActivityIndicatorView alloc] initWithFrame:self.loadingContainerView.bounds];
-        loadView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-        loadView.center = self.loadingContainerView.center;
+        UIActivityIndicatorView *loadView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 15, 15)];
+        loadView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+        loadView.center = CGPointMake(self.loadingContainerView.center.x, self.loadingContainerView.frame.size.height-loadView.frame.size.height);
         [self.loadingContainerView addSubview:loadView];
         [loadView startAnimating];
     }else{
