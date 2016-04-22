@@ -25,6 +25,9 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
 @property (nonatomic,strong) UIImage *warnImage;
 @property (nonatomic,strong) UIImage *messageImage;
 
+@property (nonatomic,strong) UIColor *tintColor;
+@property (nonatomic,assign) BOOL shakeAnimation;
+
 @property (nonatomic,strong) UIView *loadingView;
 @property (nonatomic,assign) HsProgressShowStatus showStatus;
 
