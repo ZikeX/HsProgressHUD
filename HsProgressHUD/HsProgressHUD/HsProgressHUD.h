@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
  *  @since
  */
 + (void)showWithMessageTitle:(NSString *)title;
++ (void)showWithMessageTitle:(NSString *)title delay:(CGFloat)delay;
 /**
  *  @author wangjindong, 16-01-15 18:01:06
  *
@@ -82,7 +83,7 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
  *  @since
  */
 + (void)showWithSucessTitle:(NSString *)title;
-
++ (void)showWithSucessTitle:(NSString *)title delay:(CGFloat)delay;
 /**
  *  @author wangjindong, 16-01-15 18:01:15
  *
@@ -93,7 +94,7 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
  *  @since
  */
 + (void)showWithErrorTitle:(NSString *)title;
-
++ (void)showWithErrorTitle:(NSString *)title delay:(CGFloat)delay;
 /**
  *  @author wangjindong, 16-01-15 18:01:26
  *
@@ -104,7 +105,7 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
  *  @since
  */
 + (void)showWithWarnTitle:(NSString *)title;
-
++ (void)showWithWarnTitle:(NSString *)title delay:(CGFloat)delay;
 /**
  *  @author wangjindong, 16-01-15 18:01:36
  *

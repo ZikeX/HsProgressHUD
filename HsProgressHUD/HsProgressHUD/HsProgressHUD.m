@@ -305,19 +305,19 @@ static float _minContentContainerViewHeight = 50;//内容最小高度
         [self dismissAfterDelay:delay];
     }
 }
-- (void)showWithSucessTitle:(NSString *)title {
-    [self showWithTitle:title status:HsProgressStatusSucess delay:3.0f];
+- (void)showWithSucessTitle:(NSString *)title delay:(CGFloat)delay{
+    [self showWithTitle:title status:HsProgressStatusSucess delay:delay];
 }
-- (void)showWithMessageTitle:(NSString *)title {
-    [self showWithTitle:title status:HsProgressStatusMessage delay:3.0f];
-}
-
-- (void)showWithErrorTitle:(NSString *)title {
-    [self showWithTitle:title status:HsProgressStatusError delay:0.0f];
+- (void)showWithMessageTitle:(NSString *)title delay:(CGFloat)delay{
+    [self showWithTitle:title status:HsProgressStatusMessage delay:delay];
 }
 
-- (void)showWithWarnTitle:(NSString *)title {
-    [self showWithTitle:title status:HsProgressStatusWarn delay:3.0f];
+- (void)showWithErrorTitle:(NSString *)title delay:(CGFloat)delay{
+    [self showWithTitle:title status:HsProgressStatusError delay:delay];
+}
+
+- (void)showWithWarnTitle:(NSString *)title delay:(CGFloat)delay{
+    [self showWithTitle:title status:HsProgressStatusWarn delay:delay];
 }
 
 - (void)immediatelyDismiss {
@@ -362,19 +362,33 @@ static float _minContentContainerViewHeight = 50;//内容最小高度
 }
 
 + (void)showWithSucessTitle:(NSString *)title {
-    [[HsProgressHUD shareInstance] showWithSucessTitle:title];
+    [[HsProgressHUD shareInstance] showWithSucessTitle:title delay:3.0f];
 }
++ (void)showWithSucessTitle:(NSString *)title delay:(CGFloat)delay{
+    [[HsProgressHUD shareInstance] showWithSucessTitle:title delay:delay];
+}
+
 + (void)showWithMessageTitle:(NSString *)title {
-    [[HsProgressHUD shareInstance] showWithMessageTitle:title];
+    [[HsProgressHUD shareInstance] showWithMessageTitle:title delay:3.0f];
+}
++ (void)showWithMessageTitle:(NSString *)title delay:(CGFloat)delay{
+    [[HsProgressHUD shareInstance] showWithMessageTitle:title delay:delay];
 }
 
 + (void)showWithErrorTitle:(NSString *)title {
-    [[HsProgressHUD shareInstance] showWithErrorTitle:title];
+    [[HsProgressHUD shareInstance] showWithErrorTitle:title delay:3.0f];
+}
++ (void)showWithErrorTitle:(NSString *)title delay:(CGFloat)delay{
+    [[HsProgressHUD shareInstance] showWithErrorTitle:title delay:delay];
 }
 
 + (void)showWithWarnTitle:(NSString *)title {
-    [[HsProgressHUD shareInstance] showWithWarnTitle:title];
+    [[HsProgressHUD shareInstance] showWithWarnTitle:title delay:3.0f];
 }
++ (void)showWithWarnTitle:(NSString *)title delay:(CGFloat)delay{
+    [[HsProgressHUD shareInstance] showWithWarnTitle:title delay:delay];
+}
+
 + (void)dismiss {
     [[HsProgressHUD shareInstance] dismiss];
 }
