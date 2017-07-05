@@ -19,19 +19,19 @@ typedef NS_ENUM(NSInteger, HsProgressShowStatus) {
 
 @interface HsProgressHUD : UIView
 
-@property (nonatomic,strong) UIImage *deleteImage;
-@property (nonatomic,strong) UIImage *successImage;
-@property (nonatomic,strong) UIImage *errorImage;
-@property (nonatomic,strong) UIImage *warnImage;
-@property (nonatomic,strong) UIImage *messageImage;
+@property (nonatomic, strong) UIImage *deleteImage;
+@property (nonatomic, strong) UIImage *successImage;
+@property (nonatomic, strong) UIImage *errorImage;
+@property (nonatomic, strong) UIImage *warnImage;
+@property (nonatomic, strong) UIImage *messageImage;
 
-@property (nonatomic,strong) UIColor *tintColor;
-@property (nonatomic,assign) BOOL shakeAnimation;
+@property (nonatomic, strong) UIColor *tintColor;
+@property (nonatomic, assign) BOOL shakeAnimation;
 
-@property (nonatomic,strong) UIView *loadingView;
-@property (nonatomic,assign) HsProgressShowStatus showStatus;
+@property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic, assign) HsProgressShowStatus showStatus;
 
-@property (nonatomic,assign) BOOL cancelEnable;
+@property (nonatomic, assign) BOOL cancelEnable;
 
 + (instancetype)shareInstance;
 
