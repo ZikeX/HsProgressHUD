@@ -27,3 +27,13 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0f * NSEC_PER_SEC)),
 }
 
 ```
+
+
+## 中间的loading是可以定制的
+
+将demo里面的下面代码注释掉再看看效果
+```c
+    HsProgressLoadingView *loadingView = [[HsProgressLoadingView alloc] init];
+    [HsProgressHUD shareInstance].loadingView = loadingView;
+    [HsProgressHUD setCancelEnable:NO];
+```
